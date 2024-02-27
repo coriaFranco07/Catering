@@ -1,0 +1,128 @@
+<%- include ('../partials/head.ejs') %>
+    <div class=" container mt-4 col-12 d-flex">
+        <% if (typeof validaciones != 'undefined'){ %>
+          <% validaciones.forEach((valid)=>{%>
+
+            <strong class="btn btn-outline-danger btn-sm"><%=valid%></strong>
+
+             
+          <%})%>
+
+        <% } %>
+
+
+      </div>
+      
+      <div class="container mt-4 col-12 d-flex">
+       
+      <div class="card border-secondary">
+        <div class="card-header bg-primary text-white text-center">EDITAR REGISTRO</div>
+            <div class="card-body">
+              
+                <form action="/volante/proc/update" method="post">
+                  <div class="row mt-3">
+                    <div class="col-4">
+                      <input type="hidden" class="form-control" id="id_proc" name="id_proc" tabindex="0" value="<%= orden.id_proc%>" hidden>  
+                      <input type="hidden" class="form-control" id="id_volante" name="id_volante" tabindex="0" value="<%= orden.id_volante%>" hidden>  
+                      <span class="input-group-text d-sm-block bg-primary text-white">ORD.COMPRA</span>
+                        <input type="text"  class="form-control text-center" id="nro_orden" name="nro_orden" tabindex="0" value="<% if(typeof orden.orden_compra != 'undefined') { %><%= orden.orden_compra.nro_orden %><%}%>">
+                    </div>
+                    <div class="col-8">  
+                      <span class="input-group-text d-sm-block bg-primary text-white">PROVEEDOR</span>
+                      <select id="proveedor" name="proveedor" class="form-select " tabindex="3" >
+                        <% proveedor.forEach((prv) => { %>
+                          <option class="text-sm-center" <%= orden.orden_compra.id_proveedor==prv.id_proveedor ? 'selected' : '' %> value="<%=prv.id_proveedor %>"><%=prv.dsc_proveedor %></option>
+                         <% }) %>
+                      </select>
+                        
+
+                    </div>
+                  <div class="row mt-3">
+                    <div class="col-6">      
+                        <span class="input-group-text d-sm-block bg-primary text-white">IMPORTE</span>
+                        <input type="number" min="0"  step=".01"  class="form-control text-center" id="importe" name="importe" tabindex="1" value=<%= orden.importe %>>
+                        
+                    </div>
+                    <div class="col-6">      
+                      <span class="input-group-text d-sm-block bg-primary text-white">CONTROL  %</span>
+                      <input type="number"  class="form-control text-center" id="control_importe" name="control_importe" tabindex="1" value=<%=orden.control_importe%>>
+                      
+                    </div>                    
+                  </div>  
+                  <div class="row mt-3">
+                    <div class="col-3">      
+                        <span class="input-group-text d-sm-block bg-primary text-white">FEC.INICIO</span>
+                        <input type="date"  class="form-control text-center" id="fch_inicio" name="fch_inicio" tabindex="1" value=<% if (orden.fch_inicio != undefined){ %> <%= orden.fch_inicio.toISOString().slice(0,10)%>  <%}%>>                       
+                    </div>
+                    <div class="col-3">      
+                      <span class="input-group-text d-sm-block bg-primary text-white">FEC.FIN</span>
+                      <input type="date"  class="form-control text-center" id="fch_fin" name="fch_fin" tabindex="1" value=<% if (orden.fch_fin != undefined){ %> <%= orden.fch_fin.toISOString().slice(0,10)%>  <%}%>>                       
+                  </div>
+
+                    <div class="col-3">      
+                      <span class="input-group-text d-sm-block bg-primary text-white">CONTROL DIAS</span>
+                      <input type="number"  class="form-control text-center" id="dias_control" name="dias_control" tabindex="1" value=<%=orden.dias_control%>>
+                      
+                    </div> 
+                    <div class="col-3">      
+                      <span class="input-group-text d-sm-block bg-primary text-white">FEC.ENTREGA</span>
+                      <input type="date" class="form-control text-center" id="fch_entrega" name="fch_entrega" tabindex="1" value=<% if( orden.fch_entrega != undefined) { %> <%= orden.fch_entrega.toISOString().slice(0,10)%>  <%}%>>
+                      
+                    </div>                    
+                  </div> 
+                  <div class="row mt-3">
+                    <div class="col-12">
+                      <span class="input-group-text d-sm-block bg-primary text-white">OBSERVACION</span>
+                      <input type="text"  class="form-control text-center" id="observ_proc" name="observ_proc" tabindex="0" value="<% if(typeof orden.observ_proc != 'undefined') { %><%= orden.observ_proc %><%}%>">
+
+                    </div>          
+                  </div>
+                  
+                 <div class="row-cols-sm-8 mt-3">                   
+                    <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>
+                    <a href="/volante/vlt/<%= orden.id_volante%>" class="btn btn-secondary">Cancelar</a>
+                  </div>
+                </form>
+            </div>
+        </div>
+      </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if(alert) {%>
+    
+      <script>
+        
+        Swal.fire({
+          title: '<%= alertTitle  %>',
+          text: '<%= AlertMessage  %>',
+          icon: '<%= alertIcon  %>',
+          showConfirmButton: '<%= showConfirmButton  %>',
+          timer: '<%= timer  %>'
+        })
+        /* .then(()=>{
+          window.location= '<%= ruta %>'
+          window.location= '/exptes/create'
+        }) */
+    
+    </script>
+      
+    
+    
+    <% } %>  
+
+   <!--  <script>
+      const fecha = document.querySelector('input[type="date"]');
+      
+      window.addEventListener('load', function(){
+          fecha.addEventListener('change', function(){
+            const ini = new Date(`${this.value}T05:01:00`);
+            alert(ini)
+           // inicio.innerText=ini
+          })
+
+      });
+  
+  </script> -->
+  </body>
+</html>

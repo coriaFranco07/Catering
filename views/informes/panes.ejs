@@ -1,0 +1,107 @@
+<%- include ('../partials/head.ejs') %>
+      <div class="container">
+        <div>
+          <a href="/exptes" class="btn btn-block btn-outline-secondary btn-xs align-items-right"><i class="fas fa-undo"></i></a>
+        </div>
+        <div class="row">
+       
+           
+
+      
+       <div class="div_separador">
+          Registros por página
+       </div>
+
+       <div class="col-12">
+        <table id="procesos" class="table table-bordered display nowrap" cellspacing="0" width:"100%" >
+        <thead>
+            <tr class="bg-primary text-white" style="margin-left: 10px;" >
+              
+                
+               <th scope="col">Requermiento</th>
+                <th scope="col">N.Vol</th>
+                <th scope="col">A.Vol</th>
+                <th scope="col">Linea</th>
+                <th scope="col" >Importe</th>
+                <th scope="col">Saldo</th>
+                <th scope="col">Expediente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Tr</th>
+                <th scope="col">In</th>
+                
+                
+                <th scope="col" hidden>id_proc</th>
+                 <th scope="col" hidden>Control Importe</th>
+                <th scope="col" hidden>Control Vencimiento</th>
+                <th scope="col" hidden>Control Entrega</th>
+                <th scope="col" hidden>ctrl_cant_proc</th>
+                <th scope="col" hidden>ctrl_sv</th>
+                            
+            </tr>
+        </thead>
+        <tbody>
+          <% requerimientos.forEach((req) => { %>
+            <tr>
+             
+              
+            
+              <td><%= req.tipo_elementos.dsc_tipo_elemento %></td>
+              <td><%= req.volante.nro_volante %></td>
+              <td><%= req.volante.year_volante%></td>
+              <td><%= req.nro_linea%></td>
+              <td><%= req.importe%></td>
+              <td><%= req.saldo_proc%></td>
+              <td><%= req.volante.expte.nro_expte%></td>
+              <td><%= req.estado.dsc_estado%></td>
+           
+              <td>
+                <a href="/informes/requerimientos/datos/<%= req.tipo_elementos.dsc_tipo_elemento %>/<%= req.id_proc%>" class="font-weight-bold" id="datoCV"><%= req.cant_proc%></a>
+              </td>
+              <td>
+                <a href="/" class="font-weight-bold" id="datoSV"><%= req.cant_sv%></a>
+              </td>
+
+              <td hidden><%= req.id_proc%></td>
+              <td hidden><%= req.ctrl_porc%></td>
+              <td hidden><%= req.ctrl_fch%></td>
+              <td hidden><%= req.ctrl_entrega%></td>
+              <td hidden><%= req.cant_proc%></td>
+              <td hidden><%= req.cant_sv%></td>
+              
+             
+
+              
+             
+
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    </div>
+      </div>
+      </div>
+    <%- include('../partials/scripts.ejs') %>
+    <script>
+        //esto es datatable
+        
+        $(document).ready(function () {
+            //#users es el id de la tabla
+             var dt = $('#procesos').DataTable({
+        dom: 'Plfrtip'
+    });
+ 
+    $('#procesos').DataTable().searchPanes.rebuildPane(0, true);
+    });
+                   
+      
+            
+        
+         
+           
+
+          
+       
+    </script>
+  
+  </body>
+</html>

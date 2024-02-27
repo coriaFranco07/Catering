@@ -1,0 +1,133 @@
+<%- include ('../partials/head.ejs') %>
+      <div class="container-sm">
+        
+        <a href="users/create" class="btn btn-block btn-primary btn-xs"><i class='far fa-plus-square'></i></i></a>
+      
+       <div class="div_separador">
+          Registros por página
+       </div>
+        <table id="users" class="table table-striped dt-responsive nowrap" style="width:100%" >
+        <thead>
+            <tr class="bg-primary text-white" style="margin-left: 10px;" >
+                <th scope="col" hidden>ID</th>
+                <th scope="col">Usuario</th>
+                <th scope="col" >Acceso</th>
+                <th scope="col">Activo</th>
+                <th scope="col">Acciones</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+          <% users.forEach((user) => { %>
+            <tr>
+              <td hidden><%= user.id_user%></td>
+              <td><%= user.username %></td>
+              <td><%= user.last_access.toISOString().slice(0,10)%></td>
+              <td><%= user.active%></td>
+              
+              
+          
+
+                <td>
+                    <a href="users/pass/<%= user.id_user %>" class="btn btn-outline-info"><i class="fas fa-user-edit"></i></a>
+                    <a href="users/role/<%= user.id_user %>" class="btn btn-outline-success"><i class="fas fa-user-tag"></i></a>
+                    <a href="users/active/<%= user.id_user %>" class="btn btn-outline-danger"><i class="fas fa-user-times"></i></a>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    
+    </div>
+    <%- include('../partials/scripts.ejs') %>
+    <script>
+        //esto es datatable
+        
+        $(document).ready(function () {
+            //#users es el id de la tabla
+            $('#users').removeAttr('width').DataTable( {
+              dom: 'lBfrtip',
+              buttons: [
+               
+                    {
+                      extend: 'excelHtml5',
+                      text: '<i class="far fa-file-excel mr-2 btn btn-success btn-sm"></i>',
+                    },
+                    {
+                    extend: 'pdfHtml5',
+                    text: '<i class="far fa-file-pdf mr-2 btn btn-danger btn-sm"></i>',
+                    
+                    }
+              ],
+              columnDefs : [
+                { "width": "0%", "targets": 0 },
+                { "width": "20%", "targets": 1, "className": 'dt-center' },
+                { "width": "20%", "targets": 2, "className": 'dt-center' },
+                { "width": "20%", "targets": 3 , "className": 'dt-center'},
+                { "width": "40%", "targets": 4, "className": 'dt-center' },
+                
+     
+                
+                { "orderable": false, "targets": 4 },
+           
+               
+              ],
+                pageLength: 5,
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                lengthMenu: [[5,10,20,-1],[5,10,20,'Todos']],
+                language: {
+                    zeroRecords: 'No se encontraron Registros',
+                    search:  'Buscar',
+                    lengthMenu:     " _MENU_ ",
+                    info: "REG: _START_ - _END_ de _TOTAL_ ",
+                
+                    paginate: {
+                        first:    '«',
+                        previous: '‹',
+                        next:     '›',
+                        last:     '»'
+                    },
+                    aria: {
+                        paginate: {
+                            first:    'Primera',
+                            previous: 'Anterior',
+                            next:     'Siguiente',
+                            last:     'Ultima'
+                        }
+                    }
+                
+                
+                
+                
+                
+                }
+                
+                   
+                
+            })
+        });
+
+        //esto es del sweetalert2
+        function confirmar(id_expte){
+            
+            Swal.fire({
+                title: 'Va a ELIMINAR un registro?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar'
+            }).then((result) => {
+                
+                if (result.isConfirmed) {
+                    window.location='exptes/delete/' + id_expte;
+                } 
+                })
+        }
+    </script>
+  
+  </body>
+</html>

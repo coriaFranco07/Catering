@@ -1,0 +1,124 @@
+<%- include ('../partials/head.ejs') %>
+      <div class="container">
+        <a href="/informes/requerimientos" class="btn btn-block btn-outline-secondary btn-xs align-items-right"><i class="fas fa-undo"></i></a>
+        <div class="text-center color">
+          <h1 class="badge bg-primary text-wrap text-uppercase fs-1"><%=elem %></h1>
+        </div>
+      
+       <div class="div_separador">
+          Registros por página
+          
+       </div>
+        <table id="elemento" class="table table-striped dt-responsive nowrap" style="width:100%" >
+        <thead>
+            <tr class="bg-primary text-white" style="margin-left: 10px;" >
+                <th scope="col" hidden>id_expte</th>
+                <th scope="col">Nro. Expediente</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Prioridad</th>
+                <th scope="col">Contratación</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Estado</th>
+               
+
+                
+            </tr>
+        </thead>
+        <tbody>
+          <% elementos.forEach((elts) => { %>
+            <tr>
+              <td hidden><%= elts.id_expte %></td>
+              <td><%= elts.nro_expte %></td>
+              <td><% if( elts.fch_expte) { %><%= elts.fch_expte.toISOString().slice(0,10)%><%}%></td>
+              
+              <td><%= elts.prioridad.dsc_prioridad %></td>
+              <td><%= elts.contratacion.dsc_contratacion %></td>
+              <td><%= elts.categoria %></td>
+              <td><%= elts.estado.dsc_estado %></td>
+              
+            
+             
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    
+    </div>
+
+    <%- include('../partials/scripts.ejs') %>
+    
+    <script>
+        //esto es datatable
+        
+        $(document).ready(function () {
+            //#users es el id de la tabla
+            $('#elemento').removeAttr('width').DataTable( {
+              dom: 'lBfrtip',
+              buttons: [
+               
+                    {
+                      extend: 'excelHtml5',
+                      text: '<i class="far fa-file-excel mr-2 btn btn-success btn-sm"></i>',
+                    },
+                    {
+                    extend: 'pdfHtml5',
+                    text: '<i class="far fa-file-pdf mr-2 btn btn-danger btn-sm"></i>',
+                    
+                    }
+              ],
+              columnDefs : [
+                { "width": "0%", "targets": 0 },
+                { "width": "30%", "targets": 1, "className": 'dt-center' },
+                { "width": "7%", "targets": 2, "className": 'dt-center' },
+                { "width": "10%", "targets": 3 , "className": 'dt-center'},
+                { "width": "10%", "targets": 4, "className": 'dt-center' },
+                { "width": "15%", "targets": 5, "className": 'dt-head-center' },
+                { "width": "15%", "targets": 6 , "className": 'dt-center'},
+                
+
+                //{ "render": $.fn.dataTable.render.number( ',', '.', 2, '$','' ), "targets":[6,7]},
+              ],
+                pageLength: 5,
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                lengthMenu: [[5,10,20,-1],[5,10,20,'Todos']],
+                language: {
+                    zeroRecords: 'No se encontraron Registros',
+                    search:  'Buscar',
+                    lengthMenu:     " _MENU_ ",
+                    info: "REG: _START_ - _END_ de _TOTAL_ ",
+                
+                    paginate: {
+                        first:    '«',
+                        previous: '‹',
+                        next:     '›',
+                        last:     '»'
+                    },
+                    aria: {
+                        paginate: {
+                            first:    'Primera',
+                            previous: 'Anterior',
+                            next:     'Siguiente',
+                            last:     'Ultima'
+                        }
+                    }
+                
+                
+                
+                
+                
+                }
+                
+                   
+                
+            })
+        });
+
+        //esto es del sweetalert2
+ 
+    </script>
+  
+  </body>
+</html>

@@ -1,0 +1,123 @@
+<%- include ('../partials/head.ejs') %>
+      <div class="container">
+        <a href="/" class="btn btn-block btn-outline-secondary btn-xs align-items-right"><i class="fas fa-undo"></i></a>
+        <a href="elts/create" class="btn btn-block btn-primary btn-xs"><i class='far fa-plus-square'></i></i></a>
+      
+       <div class="div_separador">
+          Registros por página
+       </div>
+        <table id="elemento" class="table table-striped dt-responsive nowrap" style="width:100%" >
+        <thead>
+            <tr class="bg-primary text-white" style="margin-left: 10px;" >
+                <th scope="col" hidden>ID</th>
+                <th scope="col">ELEMENTOS</th>
+                <th scope="col">TIPO</th>
+                <th scope="col">ACCIONES</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+          <% elementos.forEach((elts) => { %>
+            <tr>
+              <td hidden><%= elts.id_tipo_elemento %></td>
+              <td><%= elts.dsc_tipo_elemento %></td>
+              <td><%= elts.tipo_elemento %></td>
+                <td>
+                    <a href="elts/edit/<%= elts.id_tipo_elemento %>" class="btn btn-outline-info"><i class="fas fa-user-edit"></i></a>
+                    <a onclick ="confirmar(<%=elts.id_tipo_elemento %>)" class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    
+    </div>
+
+    <%- include('../partials/scripts.ejs') %>
+    
+    <script>
+        //esto es datatable
+        
+        $(document).ready(function () {
+            //#users es el id de la tabla
+            $('#elemento').removeAttr('width').DataTable( {
+              dom: 'lBfrtip',
+              buttons: [
+               
+                    {
+                      extend: 'excelHtml5',
+                      text: '<i class="far fa-file-excel mr-2 btn btn-success btn-sm"></i>',
+                    },
+                    {
+                    extend: 'pdfHtml5',
+                    text: '<i class="far fa-file-pdf mr-2 btn btn-danger btn-sm"></i>',
+                    
+                    }
+              ],
+              columnDefs : [
+                { "width": "0%", "targets": 0 },
+                { "width": "50%", "targets": 1, "className": 'dt-head-center' },
+                { "width": "10%", "targets": 2, "className": 'dt-head-center' },
+                { "width": "10%", "targets": 3 , "className": 'dt-head-center'},
+                { "orderable": false, "targets": 3 },
+               
+              ],
+                pageLength: 5,
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                lengthMenu: [[5,10,20,-1],[5,10,20,'Todos']],
+                language: {
+                    zeroRecords: 'No se encontraron Registros',
+                    search:  'Buscar',
+                    lengthMenu:     " _MENU_ ",
+                    info: "REG: _START_ - _END_ de _TOTAL_ ",
+                
+                    paginate: {
+                        first:    '«',
+                        previous: '‹',
+                        next:     '›',
+                        last:     '»'
+                    },
+                    aria: {
+                        paginate: {
+                            first:    'Primera',
+                            previous: 'Anterior',
+                            next:     'Siguiente',
+                            last:     'Ultima'
+                        }
+                    }
+                
+                
+                
+                
+                
+                }
+                
+                   
+                
+            })
+        });
+
+        //esto es del sweetalert2
+        function confirmar(id_elemento){
+            
+            Swal.fire({
+                title: 'Va a ELIMINAR un registro?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar'
+            }).then((result) => {
+                
+                if (result.isConfirmed) {
+                    window.location='elts/delete/' + id_elemento;
+                } 
+                })
+        }
+    </script>
+  
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<%- include ('../partials/head.ejs') %>
+      <% if (user) { %>
+        <div class=" container mt-4 col-12 d-flex">
+          <% if (typeof validaciones != 'undefined'){ %>
+            <% validaciones.forEach((valid)=>{%>
+  
+              <strong class="btn btn-outline-danger btn-sm"><%=valid%></strong>
+  
+               
+            <%})%>
+  
+          <% } %>
+        </div>
+        <div class="container mt-4 col-xxl-12 d-flex">
+      <div class="card border-secondary">
+        <div class="card-header bg-primary text-white text-center">Cambiar Contraseña</div>
+            <div class="card-body">
+                <form action="/users/change" method="POST">
+                    
+                    <input id="username" name="username" value="<%= user%>" hidden>
+                    
+                    
+                  <div class="row mt-3">
+                    <div class="col-12">
+                        <span class="input-group-text d-sm-block bg-primary text-white">Contraseña Actual</span>
+                        <input type="text" class="form-control text-center" id="user_pass_actual" name="user_pass_actual" tabindex="0" >
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">      
+                        <span class="input-group-text d-sm-block bg-primary text-white">Contraseña nueva</span>
+                        <input type="password" class="form-control text-center" id="user_pass_new" name="user_pass_new" tabindex="1" >
+                    </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-12">      
+                      <span class="input-group-text d-sm-block bg-primary text-white">Confirme Contraseña</span>
+                      <input type="password" class="form-control text-center" id="user_pass_conf" name="user_pass_conf" tabindex="2" >
+                  </div>
+              </div>
+
+
+                    <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
+                    <a href="/" class="btn btn-secondary">Cancelar</a>
+
+                </form>
+            </div>
+        </div>
+      </div>
+<% } %>
+ 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if(alert) {%>
+    
+      <script>
+        
+        Swal.fire({
+          title: '<%= alertTitle  %>',
+          text: '<%= AlertMessage  %>',
+          icon: '<%= alertIcon  %>',
+          showConfirmButton: '<%= showConfirmButton  %>',
+          timer: '<%= timer  %>'
+        })
+        /* .then(()=>{
+          window.location= '<%= ruta %>'
+          window.location= '/exptes/create'
+        }) */
+    
+    </script>
+      
+    
+    
+    <% } %>  
+  
+  </body>
+</html>

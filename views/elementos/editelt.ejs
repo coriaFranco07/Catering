@@ -1,0 +1,37 @@
+<%- include ('../partials/head.ejs') %>
+      <% if (elemento) { %>
+      <div class="container mt-4">
+      <div class="card border-secondary">
+        <div class="card-header">Editar Registro</div>
+            <div class="card-body">
+                <form action="../update" method="POST">
+                    <input id="id_tipo_elemento" name="id_tipo_elemento" value="<%= elemento.id_tipo_elemento%>" hidden>
+                    
+                    <div class="mb-3">
+                      <label for="dsc_tipo_elemento" class="form-label">Elemento</label>
+                      <input type="text" class="form-control" id="dsc_tipo_elemento" name="dsc_tipo_elemento" value="<%= elemento.dsc_tipo_elemento %>" tabindex="1">
+                  </div>
+                 
+                  <div class="mb-3">
+                    <label for="tipo_elemento" class="form-label">Tipo</label>
+                    <select id="tipo_elemento" name="tipo_elemento" class="form-select" tabindex="2">
+                        <option <%= elemento.tipo_elemento=="BIENES" ? "selected":"" %> value="BIENES">BIENES</option>
+                        <option <%= elemento.tipo_elemento=="SERVICIOS" ? "selected":"" %> value="SERVICIOS">SERVICIOS</option>
+                        
+
+
+                    </select>
+                </div>
+                    <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
+                    <a href="/elts" class="btn btn-secondary">Cancelar</a>
+
+                </form>
+            </div>
+        </div>
+      </div>
+<% } %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+  
+  </body>
+</html>

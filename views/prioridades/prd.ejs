@@ -1,0 +1,22 @@
+<%- include ('../partials/head.ejs') %>
+   <h1>PRIORIDADES</h1> 
+   <div class="table-responsive">
+    <table class="table" border="1">
+      <thead>
+        <th>id</th>
+        <th>Prioridades</th>
+
+      </thead>
+      <tbody>
+        <% contrataciones.forEach((ctns) => { %>
+            <tr>
+                <td><%= ctns.id_contratacion %></td>
+                <td><%= ctns.dsc_contratacion %></td>
+            </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+npx prisma migrate dev --name init
+
+instalar npm i date-fns  para trabajar con fechas
+require('date-fns/format)
+
+npm i --save-dev prisma@latest
+
+npm i @prisma/client@latest
+
+Run `npm audit` for details.
+
+ npm audit fix --force

@@ -1,0 +1,248 @@
+<%- include ('../partials/head.ejs') %>
+      <div class="container">
+        <div>
+          <a href="/exptes" class="btn btn-block btn-outline-secondary btn-xs align-items-right"><i class="fas fa-undo"></i></a>
+        </div>
+        <div class="row">
+       
+           
+
+      
+       <div class="div_separador">
+          Registros por página
+       </div>
+
+       <div class="col-12">
+        <table id="procesos" class="table table-bordered display nowrap" cellspacing="0" width:"100%" >
+        <thead>
+            <tr class="bg-primary text-white" style="margin-left: 10px;" >
+              
+                
+               <th scope="col">Requermiento</th>
+                <th scope="col">N.Vol</th>
+                <th scope="col">A.Vol</th>
+                <th scope="col">Linea</th>
+                <th scope="col" >Importe</th>
+                <th scope="col">Saldo</th>
+                <th scope="col">Expediente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Tr.</th>
+                <th scope="col">In.</th>
+                
+                <th scope="col" hidden>id_proc</th>
+                 <th scope="col" hidden>ctrol_proc</th>
+                <th scope="col" hidden>ctrl_fch</th>
+                <th scope="col" hidden>ctrl_entrega</th>
+               
+                
+            </tr>
+        </thead>
+        <tbody>
+          <% requerimientos.forEach((req) => { %>
+            <tr>
+             
+              
+            
+              <td><%= req.tipo_elementos.dsc_tipo_elemento %></td>
+              <td><%= req.volante.nro_volante %></td>
+              <td><%= req.volante.year_volante%></td>
+              <td><%= req.nro_linea%></td>
+              <td><%= req.importe%></td>
+              <td><%= req.saldo_proc%></td>
+              <td><%= req.volante.expte.nro_expte%></td>
+              <td><%= req.estado.dsc_estado%></td>
+              <td><%= req.cant_proc%></td>
+              <td><%= req.cant_sv%></td>
+
+              <td hidden><%= req.id_proc%></td>
+              <td hidden><%= req.ctrl_porc%></td>
+              <td hidden><%= req.ctrl_fch%></td>
+              <td hidden><%= req.ctrl_entrega%></td>
+              
+
+              
+             
+
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    </div>
+    </div>
+    <%- include('../partials/scripts.ejs') %>
+    <script>
+        //esto es datatable
+        
+        $(document).ready(function () {
+            //#users es el id de la tabla
+           const table= $('#procesos').removeAttr('width').DataTable( {
+
+              dom: 'Blfrtip',
+              buttons: [
+               
+                    {
+                      extend: 'excelHtml5',
+                      text: '<i class="far fa-file-excel mr-2 btn btn-success btn-sm"></i>',
+                    },
+                    {
+                    extend: 'pdfHtml5',
+                    text: '<i class="far fa-file-pdf mr-2 btn btn-danger btn-sm"></i>',
+                    
+                    }
+              ],
+              columnDefs : [
+                
+                { "width": "8%", "targets": 0, "className": 'dt-center' },
+                { "width": "8%", "targets": 1 , "className": 'dt-center'},
+                { "width": "7%", "targets": 2, "className": 'dt-center' },
+                { "width": "5%", "targets": 3, "className": 'dt-center'},
+                { "width": "15%", "targets": 4 , "className": 'dt-center'},
+                { "width": "15%", "targets": 5 , "className": 'dt-center'},
+                { "width": "15%", "targets": 6 , "className": 'dt-center'},
+                { "width": "15%", "targets": 7 , "className": 'dt-center'},
+                { "width": "5%", "targets": 8 , "className": 'dt-center'},
+                { "width": "5%", "targets": 9 , "className": 'dt-center'},
+                { "width": "0%", "targets": 10, "className": 'dt-center' },
+                { "width": "0%", "targets": 11, "className": 'dt-center' },
+                { "width": "0%", "targets": 12 , "className": 'dt-center'},
+                { "width": "0%", "targets": 13 , "className": 'dt-center'},
+              
+                
+              
+     
+                
+                
+                { "render": $.fn.dataTable.render.number( ',', '.', 2, '$','' ), "targets":[6,7]},
+                
+           
+               
+              ],
+                pageLength: 5,
+                //Processing: "Procesando...",
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                lengthMenu: [[5,10,20,-1],[5,10,20,'Todos']],
+                language: {
+                    zeroRecords: 'No se encontraron Registros',
+                    search:  'Buscar',
+                    lengthMenu:     " _MENU_ ",
+                    info: "REG: _START_ - _END_ de _TOTAL_ ",
+                
+                    paginate: {
+                        first:    '«',
+                        previous: '‹',
+                        next:     '›',
+                        last:     '»'
+                    },
+                    aria: {
+                        paginate: {
+                            first:    'Primera',
+                            previous: 'Anterior',
+                            next:     'Siguiente',
+                            last:     'Ultima'
+                        }
+                    }
+                
+                
+                
+                
+                
+                },
+                "rowCallback": function( row, data ) {
+                         
+                        /*  if ( data[10] != 0 ) {
+                         $('td', row).css('background-color','#99ff9c')
+                         } */
+                         
+                         if ( data[11] != 0 ) {
+                          
+                         $('td', row).css('background-color','#a60d2d').css('color', 'white')
+                         }
+
+                         
+                         if(data[12]!=0){
+                          $('td', row).css('background-color','yellow')
+                         }
+
+                         if(data[13]!=0){
+                          $('td', row).css('background-color','orange')
+                         }
+
+                         if(data[8]!=0){
+                           $("td:eq(8)", row).addClass('btn bg-success text-white col  d-flex justify-content-center ')
+                         };
+                        
+                          if(data[9]!=0){
+                           $("td:eq(9)", row).addClass('btn bg-secondary text-white col  d-flex justify-content-center ')                          };
+                 },
+                 
+                 responsive: true,
+                 orderCellsTop: true,
+                fixedHeader: true,
+                initComplete: function() {
+                      var api = this.api();
+                      // For each column
+                      api.columns().eq(0).each(function(colIdx) {
+                          // Set the header cell to contain the input element
+                          var cell = $('.filters th').eq($(api.column(colIdx).header()).index());
+                          var title = $(cell).text();
+                          
+                          $(cell).html( '<input type="text" class="text-center w-100 " placeholder="'+title+'"  />' );
+                          // On every keypress in this input
+                          $('input', $('.filters th').eq($(api.column(colIdx).header()).index()) )
+                              .off('keyup change')
+                              .on('keyup change', function (e) {
+                                  e.stopPropagation();
+                                  // Get the search value
+                                  $(this).attr('title', $(this).val());
+                                  var regexr = '({search})'; //$(this).parents('th').find('select').val();
+                                  var cursorPosition = this.selectionStart;
+                                  // Search the column for that value
+                                  api
+                                      .column(colIdx)
+                                      .search((this.value != "") ? regexr.replace('{search}', '((('+this.value+')))') : "", this.value != "", this.value == "")
+                                      .draw();
+                                  $(this).focus()[0].setSelectionRange(cursorPosition, cursorPosition);
+                              });
+                      });
+                  }
+    
+
+                 
+                   
+               
+            });
+            
+        
+            $('#procesos tbody').on('click', 'td', function () {
+                  var data = table.row(this).data();
+          
+                  window.location='/informes/requerimientos/datos/' + data[0] + '/' + data[10];
+              });  
+
+           
+
+          
+           
+          }); 
+          
+        
+        $('#procesos thead tr').clone(true).addClass('filters').appendTo( '#procesos thead' );
+        
+          
+          
+       /*  function proc_activo(id_proc){
+    
+          if(id_proc){
+               
+            alert('trabajar los procesos anexos')
+            //window.location='/volante/vlt/' + id_volante;
+            }    
+
+      } */
+    </script>
+  
+  </body>
+</html>

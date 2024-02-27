@@ -1,0 +1,254 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model proveedor {
+  id_proveedor Int @id @default(autoincrement())
+  dsc_proveedor String @unique
+  orden_compra orden_compra[]
+  user_proc String?
+
+
+}
+
+model prioridad {
+  id_prioridad Int @id @default(autoincrement())
+  dsc_prioridad String @unique
+  expte expte[]
+  user_proc String?
+
+}
+
+model contratacion {
+  id_contratacion Int @id @default(autoincrement())
+  dsc_contratacion String @unique
+  expte expte[]
+  user_proc String?
+  est_mov_contratacion est_mov_contratacion[] 
+
+}
+
+model tipo_elementos {
+  id_tipo_elemento Int @id @default(autoincrement())
+  dsc_tipo_elemento String @unique
+  tipo_elemento String
+  expte_tipo_elemento expte_tipo_elemento []
+  procesos procesos []
+  user_proc String?
+
+}
+
+model expte_tipo_elemento {
+  id_elem_expte Int @id @default(autoincrement())
+  id_expte Int
+   expte expte @relation(fields: [id_expte], references: [id_expte])
+  id_tipo_elemento Int
+  tipo_elementos tipo_elementos @relation(fields: [id_tipo_elemento], references: [id_tipo_elemento])
+  @@unique([id_expte,id_tipo_elemento])
+  user_proc String?
+
+}
+model estado {
+  id_estado Int @id @default(autoincrement())
+  dsc_estado String @unique
+  expte expte[]
+  procesos procesos[]
+  user_proc String?
+
+}
+
+model expte {
+  id_expte Int @id @default(autoincrement())
+  nro_expte String @unique
+  fch_expte DateTime @db.Date
+  id_volante volante?
+  id_prioridad Int
+  prioridad prioridad @relation(fields: [id_prioridad], references: [id_prioridad])
+  id_contratacion Int
+  contratacion contratacion  @relation(fields: [id_contratacion], references: [id_contratacion])
+  expte_tipo_elemento expte_tipo_elemento []
+  id_estado Int
+  estado estado @relation(fields: [id_estado], references: [id_estado])
+  movimientos movimientos []
+  categoria String
+  user_proc String?
+  fch_estado DateTime? @db.Date 
+  refer_expte String
+}
+
+model volante {
+  id_volante Int @id @default(autoincrement())
+  nro_volante Int 
+  year_volante Int 
+  total_volante Decimal
+  saldo Decimal @default(0)
+  id_expte Int @unique
+  expte expte @relation(fields: [id_expte], references: [id_expte])
+  procesos procesos[]
+  user_proc String?
+ 
+
+}
+
+
+model user {
+  id_user Int @id @default(autoincrement())
+  username String @unique
+  password String
+  last_access DateTime
+  active Boolean
+  cnt_intentos Int
+  proc_user String
+  proc_fch DateTime
+  roles_user roles_user []
+  user_proc String?
+}
+
+model roles {
+  id_rol Int @id @default(autoincrement())
+  name_rol String @unique
+  roles_user roles_user []
+  user_proc String?
+
+}
+
+model roles_user {
+  id_user Int 
+  user user @relation(fields: [id_user], references: [id_user])
+  id_rol Int
+  roles roles @relation(fields: [id_rol], references: [id_rol])
+  proc_user String
+  proc_fch DateTime @default(now())
+  @@id([id_user, id_rol])
+  user_proc String?
+}
+
+model movimientos {
+
+  id_mov Int @id @default(autoincrement())
+  fch_mov DateTime @db.Date
+  ofi_mov String @db.VarChar(50)
+  user_mov String @db.VarChar(50)
+  det_mov String @db.VarChar(250)
+  id_expte Int
+  expte expte @relation(fields: [id_expte], references: [id_expte])
+  user_proc String?
+  id_est_mov Int
+  estado_mov estado_mov @relation(fields: [id_est_mov], references: [id_est_mov])
+
+
+
+}
+
+model procesos {
+  id_proc Int @id @default(autoincrement())
+  id_volante Int
+  volante volante @relation(fields: [id_volante], references: [id_volante])
+  nro_linea Int
+  id_tipo_elem Int
+  tipo_elementos tipo_elementos @relation(fields: [id_tipo_elem], references: [id_tipo_elemento])
+  importe Decimal? @default(0)
+  control_importe Int? @default(0)
+  fch_inicio DateTime? @db.Date
+  fch_fin DateTime? @db.Date
+  dias_control Int? @default(0)
+  fch_entrega DateTime? @db.Date
+  observ_proc String? @db.MediumText
+  id_orden_compra Int?
+  orden_compra orden_compra? @relation(fields: [id_orden_compra], references: [id_orden_compra])
+  id_estado Int
+  estado estado @relation(fields: [id_estado], references: [id_estado])
+  proc_fact proc_fact[]
+  saldo_proc Decimal? @default(0)
+  user_proc String?
+  cant_proc Int? @default(0)
+  ctrol_activo ctrol_proc_req []  @relation("activo")
+  ctrl_anexo ctrol_proc_req [] @relation("anexo")
+
+}
+
+
+
+model orden_compra {
+  id_orden_compra Int @id @default(autoincrement())
+  nro_orden String @unique
+  procesos procesos[]
+  id_proveedor Int 
+  proveedor proveedor @relation(fields: [id_proveedor], references: [id_proveedor])
+  saldo_orden Decimal? @default(0)
+  user_proc String?
+
+}
+
+
+
+model factura{
+  id_factura Int @id @default(autoincrement())
+  importe_fact Decimal @default(0)
+  nro_fact String? 
+  fch_fact DateTime? @db.Date
+  expte_fact String? @db.TinyText
+  observ_fact String? @db.TinyText
+  proc_fact proc_fact[]
+  user_proc String?
+}
+
+model proc_fact {
+  id_proc_fact Int @id @default(autoincrement())
+  id_factura Int
+  factura factura @relation(fields: [id_factura], references: [id_factura])
+  id_proc Int
+  procesos procesos @relation(fields: [id_proc], references: [id_proc])
+  importe_proc_fact Decimal @default(0)
+  user_proc String?
+}
+
+
+
+
+model log_expte{
+  id_log_expte Int @id @default(autoincrement())
+  id_expte Int
+  nro_expte String @db.VarChar(100)
+  id_prioridad Int
+  id_contratacion Int
+  id_estado Int
+  categoria String @db.VarChar(25)
+  user_proc String @db.VarChar(15)
+  fch_user_proc DateTime @default(now())
+  fch_estado DateTime @db.Date
+  accion String? @db.VarChar(1)
+}
+
+
+model ctrol_proc_req {
+  id_proc_activo Int 
+  proceso_activo procesos @relation(name: "activo", fields: [id_proc_activo], references: [id_proc], onDelete: Cascade)
+  id_proc_anexo Int 
+  proceso_anexo procesos @relation(name: "anexo", fields: [id_proc_anexo],references: [id_proc], onDelete: Cascade)
+  @@id([id_proc_activo, id_proc_anexo])
+
+}
+
+model estado_mov {
+  id_est_mov Int @id @default(autoincrement())
+  dsc_est_mov String @db.VarChar(20) @unique
+  est_mov_contratacion est_mov_contratacion[]
+  movimientos movimientos []
+}
+
+model est_mov_contratacion {
+  id_contratacion Int 
+  id_est_mov Int
+  contratacion contratacion @relation(fields: [id_contratacion], references: [id_contratacion])
+  estado_mov estado_mov @relation(fields: [id_est_mov], references: [id_est_mov])
+  @@id([id_contratacion, id_est_mov])
+}

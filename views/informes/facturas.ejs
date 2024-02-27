@@ -1,0 +1,179 @@
+<%- include ('../partials/head.ejs') %>
+      <div class="container">
+        <div>
+          <a href="/exptes" class="btn btn-block btn-outline-secondary btn-xs align-items-right"><i class="fas fa-undo"></i></a>
+        </div>
+        <div class="row">
+       
+           
+
+      
+       <div class="div_separador">
+          Registros por página
+       </div>
+
+       <div class="col-12">
+        <table id="procesos" class="table table-bordered display nowrap" cellspacing="0" width:"100%" >
+        <thead>
+            <tr class="bg-primary text-white" style="margin-left: 10px;" >
+              <th scope="col" hidden>saldo</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Numero</th>
+                <th scope="col" >Importe</th>
+                <th scope="col">Orden Compra</th>
+                <th scope="col">Proveedor</th>
+                <th scope="col">Total O.C.</th>
+               
+                
+            </tr>
+        </thead>
+        <tbody>
+          <% facturas.forEach((fact) => { %>
+            <tr>
+             
+              
+              <td hidden><%= fact.procesos.saldo_proc%></td>
+              <td><% if( fact.factura.fch_fact) { %><%= fact.factura.fch_fact.toISOString().slice(0,10)%><%}%></td>
+              <td><%= fact.factura.nro_fact %></td>
+              <td><%= fact.importe_proc_fact%></td>
+              <td><%= fact.procesos.orden_compra.nro_orden%></td>
+              <td><%= fact.procesos.orden_compra.proveedor.dsc_proveedor%></td>
+              <td><%= fact.procesos.importe%></td>
+
+              
+             
+
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    </div>
+    </div>
+    <%- include('../partials/scripts.ejs') %>
+    <script>
+        //esto es datatable
+        
+        $(document).ready(function () {
+            //#users es el id de la tabla
+           const table= $('#procesos').removeAttr('width').DataTable( {
+
+              dom: 'lBfrtip',
+              buttons: [
+               
+                    {
+                      extend: 'excelHtml5',
+                      text: '<i class="far fa-file-excel mr-2 btn btn-success btn-sm"></i>',
+                    },
+                    {
+                    extend: 'pdfHtml5',
+                    text: '<i class="far fa-file-pdf mr-2 btn btn-danger btn-sm"></i>',
+                    
+                    }
+              ],
+              columnDefs : [
+                { "width": "0%", "targets": 0, "className": 'dt-center' },
+                { "width": "10%", "targets": 1, "className": 'dt-center' },
+                { "width": "15%", "targets": 2, "className": 'dt-center' },
+                { "width": "15%", "targets": 3 , "className": 'dt-center'},
+                { "width": "10%", "targets": 4, "className": 'dt-center' },
+                { "width": "35%", "targets": 5 , "className": 'dt-center'},
+                { "width": "15%", "targets": 6 , "className": 'dt-center'},
+              
+                
+              
+     
+                
+                
+                { "render": $.fn.dataTable.render.number( ',', '.', 2, '$','' ), "targets":[3,6]},
+                
+           
+               
+              ],
+                pageLength: 5,
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                lengthMenu: [[5,10,20,-1],[5,10,20,'Todos']],
+                language: {
+                    zeroRecords: 'No se encontraron Registros',
+                    search:  'Buscar',
+                    lengthMenu:     " _MENU_ ",
+                    info: "REG: _START_ - _END_ de _TOTAL_ ",
+                
+                    paginate: {
+                        first:    '«',
+                        previous: '‹',
+                        next:     '›',
+                        last:     '»'
+                    },
+                    aria: {
+                        paginate: {
+                            first:    'Primera',
+                            previous: 'Anterior',
+                            next:     'Siguiente',
+                            last:     'Ultima'
+                        }
+                    }
+                
+                
+                
+                
+                
+                },
+                "rowCallback": function( row, data ) {
+                         
+                         if ( data[0] != 0 ) {
+                         $('td', row).css('background-color','#99ff9c')
+                         }
+                 },
+                 
+                 responsive: true,
+                 orderCellsTop: true,
+                fixedHeader: true,
+                initComplete: function() {
+                      var api = this.api();
+                      // For each column
+                      api.columns().eq(0).each(function(colIdx) {
+                          // Set the header cell to contain the input element
+                          var cell = $('.filters th').eq($(api.column(colIdx).header()).index());
+                          var title = $(cell).text();
+                          
+                          $(cell).html( '<input type="text" class="text-center w-100" placeholder="'+title+'"  />' );
+                          // On every keypress in this input
+                          $('input', $('.filters th').eq($(api.column(colIdx).header()).index()) )
+                              .off('keyup change')
+                              .on('keyup change', function (e) {
+                                  e.stopPropagation();
+                                  // Get the search value
+                                  $(this).attr('title', $(this).val());
+                                  var regexr = '({search})'; //$(this).parents('th').find('select').val();
+                                  var cursorPosition = this.selectionStart;
+                                  // Search the column for that value
+                                  api
+                                      .column(colIdx)
+                                      .search((this.value != "") ? regexr.replace('{search}', '((('+this.value+')))') : "", this.value != "", this.value == "")
+                                      .draw();
+                                  $(this).focus()[0].setSelectionRange(cursorPosition, cursorPosition);
+                              });
+                      });
+                  }
+    
+
+                
+                   
+               
+            })
+        
+
+
+           
+          })    
+
+        $('#procesos thead tr').clone(true).addClass('filters').appendTo( '#procesos thead' );
+    
+
+    </script>
+  
+  </body>
+</html>

@@ -1,0 +1,179 @@
+<%- include ('../partials/head.ejs') %>
+      <div class="container">
+        <div>
+          <a href="/exptes" class="btn btn-block btn-outline-secondary btn-xs align-items-right"><i class="fas fa-undo"></i></a>
+        </div>
+        <div class="row">
+       
+           
+
+      
+       <div class="div_separador">
+          Registros por página
+       </div>
+
+       <div class="col-12">
+        <table id="procesos" class="table table-bordered display nowrap" cellspacing="0" width:"100%" >
+        <thead>
+            <tr class="bg-primary text-white" style="margin-left: 10px;" >
+              <th scope="col" hidden>id_volante</th>
+                <th scope="col">Nro Volante</th>
+                <th scope="col">Año Volante</th>
+                <th scope="col" >Total Importe</th>
+                <th scope="col">Saldo</th>
+                <th scope="col">Expediente</th>
+                <th scope="col">Estado</th>
+               
+                
+            </tr>
+        </thead>
+        <tbody>
+          <% volantes.forEach((vol) => { %>
+            <tr>
+             
+              
+              <td hidden><%= vol.id_volante%></td>
+              <td><%= vol.nro_volante %></td>
+              <td><%= vol.year_volante%></td>
+              <td><%= vol.total_volante%></td>
+              <td><%= vol.saldo%></td>
+              <td><%= vol.expte.nro_expte%></td>
+              <td><%= vol.expte.estado.dsc_estado%></td>
+
+              
+             
+
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    </div>
+    </div>
+    <%- include('../partials/scripts.ejs') %>
+    <script>
+        //esto es datatable
+        
+        $(document).ready(function () {
+            //#users es el id de la tabla
+           const table= $('#procesos').removeAttr('width').DataTable( {
+
+              dom: 'lBfrtip',
+              buttons: [
+               
+                    {
+                      extend: 'excelHtml5',
+                      text: '<i class="far fa-file-excel mr-2 btn btn-success btn-sm"></i>',
+                    },
+                    {
+                    extend: 'pdfHtml5',
+                    text: '<i class="far fa-file-pdf mr-2 btn btn-danger btn-sm"></i>',
+                    
+                    }
+              ],
+              columnDefs : [
+                { "width": "0%", "targets": 0, "className": 'dt-center' },
+                { "width": "10%", "targets": 1, "className": 'dt-center' },
+                { "width": "15%", "targets": 2, "className": 'dt-center' },
+                { "width": "15%", "targets": 3 , "className": 'dt-center'},
+                { "width": "10%", "targets": 4, "className": 'dt-center' },
+                { "width": "35%", "targets": 5 , "className": 'dt-center'},
+                { "width": "15%", "targets": 6 , "className": 'dt-center'},
+              
+                
+              
+     
+                
+                
+                { "render": $.fn.dataTable.render.number( ',', '.', 2, '$','' ), "targets":[3,4]},
+                
+           
+               
+              ],
+                pageLength: 5,
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                lengthMenu: [[5,10,20,-1],[5,10,20,'Todos']],
+                language: {
+                    zeroRecords: 'No se encontraron Registros',
+                    search:  'Buscar',
+                    lengthMenu:     " _MENU_ ",
+                    info: "REG: _START_ - _END_ de _TOTAL_ ",
+                
+                    paginate: {
+                        first:    '«',
+                        previous: '‹',
+                        next:     '›',
+                        last:     '»'
+                    },
+                    aria: {
+                        paginate: {
+                            first:    'Primera',
+                            previous: 'Anterior',
+                            next:     'Siguiente',
+                            last:     'Ultima'
+                        }
+                    }
+                
+                
+                
+                
+                
+                },
+                "rowCallback": function( row, data ) {
+                         
+                         if ( data[4] != 0 ) {
+                         $('td', row).css('background-color','#99ff9c')
+                         }
+                 },
+                 
+                 responsive: true,
+                 orderCellsTop: true,
+                fixedHeader: true,
+                initComplete: function() {
+                      var api = this.api();
+                      // For each column
+                      api.columns().eq(0).each(function(colIdx) {
+                          // Set the header cell to contain the input element
+                          var cell = $('.filters th').eq($(api.column(colIdx).header()).index());
+                          var title = $(cell).text();
+                          
+                          $(cell).html( '<input type="text" class="text-center w-100 " placeholder="'+title+'"  />' );
+                          // On every keypress in this input
+                          $('input', $('.filters th').eq($(api.column(colIdx).header()).index()) )
+                              .off('keyup change')
+                              .on('keyup change', function (e) {
+                                  e.stopPropagation();
+                                  // Get the search value
+                                  $(this).attr('title', $(this).val());
+                                  var regexr = '({search})'; //$(this).parents('th').find('select').val();
+                                  var cursorPosition = this.selectionStart;
+                                  // Search the column for that value
+                                  api
+                                      .column(colIdx)
+                                      .search((this.value != "") ? regexr.replace('{search}', '((('+this.value+')))') : "", this.value != "", this.value == "")
+                                      .draw();
+                                  $(this).focus()[0].setSelectionRange(cursorPosition, cursorPosition);
+                              });
+                      });
+                  }
+    
+
+                
+                   
+               
+            })
+        
+
+
+           
+          })    
+
+        $('#procesos thead tr').clone(true).addClass('filters').appendTo( '#procesos thead' );
+    
+
+    </script>
+  
+  </body>
+</html>

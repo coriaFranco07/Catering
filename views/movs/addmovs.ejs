@@ -1,0 +1,103 @@
+<%- include ('../partials/head.ejs') %>
+      <div class=" container mt-4 col-12 d-flex">
+        <% if (typeof validaciones != 'undefined'){ %>
+          <% validaciones.forEach((valid)=>{%>
+
+            <strong class="btn btn-outline-danger btn-sm"><%=valid%></strong>
+
+             
+          <%})%>
+
+        <% } %>
+      </div>
+      
+      <div class="container mt-4 col-12 d-flex">
+        
+      <div class="card border-secondary">
+        <div class="card-header bg-primary text-white text-center">NUEVO REGISTRO</div>
+            <div class="card-body">
+              
+                <form action="/exptes/mov/create/add" method="post">
+                  
+                   
+                  
+                  <div class="row mt-3">
+                      <div class="col-4">
+                        <input type="hidden"  id="id_expte" name="id_expte"  value="<%= expte %>">
+                        <span class="input-group-text d-sm-block bg-primary text-white">FECHA</span>
+                        <input type="date" class="form-control" id="fch_mov" name="fch_mov" tabindex="1" value="<% if(typeof valores != 'undefined') { %><%= valores.fch_mov %><%}%>">
+                    
+                      </div>
+                    
+                      <div class="col-4">      
+                        <span class="input-group-text d-sm-block bg-primary text-white">OFICINA</span>
+                        <input type="text" class="form-control" id="oficina" name="oficina" tabindex="1" value="<% if(typeof valores != 'undefined') { %><%= valores.oficina %><%}%>">
+                  
+                      </div>
+                     
+                      <div class="col-4">      
+                        <span class="input-group-text d-sm-block bg-primary text-white">USUARIO</span>
+                        <input type="text" class="form-control" id="usuario" name="usuario" tabindex="1" value="<% if(typeof valores != 'undefined') { %><%= valores.usuario %><%}%>">
+                  
+                    </div>
+
+                  </div>
+
+
+                  <div class="row mt-3"></div>
+                  
+                    <div class="col-12">      
+                      <span class="input-group-text d-sm-block bg-primary text-white">detalle</span>
+                      <input type="text" class="form-control" id="detalle" name="detalle" tabindex="1" value="<% if(typeof valores != 'undefined') { %><%= valores.detalle %><%}%>">
+                    </div>
+                  
+                  <div class="row mt-3"></div>
+                  
+                  <div class="row mt-3">
+                    <div class="col-6">
+                      <span class="input-group-text d-sm-block bg-primary text-white">Estado</span>
+                      <select id="estadomov" name="estadomov" class="form-select " tabindex="3" >
+                        <% estados.forEach((em) => { %>
+                          <option class="text-sm-center" <%= valores.estadomov==em.estado_mov.id_est_mov ? 'selected' : '' %> value="<%=em.estado_mov.id_est_mov %>"><%=em.estado_mov.dsc_est_mov %></option>
+                         <% }) %>
+                      </select>
+                    </div>
+                </div>
+                  
+                  
+                 <div class="row-cols-sm-8 mt-3">                   
+                    <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>
+                    <a href="/exptes/mov/<%= expte %>" class="btn btn-secondary">Cancelar</a>
+                  </div>
+                </form>
+            </div>
+        </div>
+      </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if(alert) {%>
+    
+      <script>
+        
+        Swal.fire({
+          title: '<%= alertTitle  %>',
+          text: '<%= AlertMessage  %>',
+          icon: '<%= alertIcon  %>',
+          showConfirmButton: '<%= showConfirmButton  %>',
+          timer: '<%= timer  %>'
+        })
+        /* .then(()=>{
+          window.location= '<%= ruta %>'
+          window.location= '/exptes/create'
+        }) */
+    
+    </script>
+      
+    
+    
+    <% } %>  
+
+  
+  </body>
+</html>
